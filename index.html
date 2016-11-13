@@ -54,4 +54,232 @@
 
   
   </body>
+=======
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>FIFA 16 Hot Players Dashboard</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    
+    <!--font aswesome -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+
+    <!-- D3 Library -->
+    <script src="http://d3js.org/d3.v3.js"></script>
+    <script src="./js/topojson.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom Dependencies -->
+    <script src="./js/script.js"></script>
+</head>
+
+<body>
+   
+    
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                        FIFA 16 Hot Players 
+                    </a>
+                </li>
+                <li>
+                    <a href="#">Dashboard</a>
+                </li>
+                <li>
+                    <a href="#">Events</a>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+                <li>
+                    <a href="#">Services</a>
+                </li>
+                <li>
+                    <a href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1>
+                           Dashboard
+                            <span class="small">Statistic of Players</span>
+                        </h1>
+<!--                        <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>-->
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-users fa-5x" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div id="num_players" class="huge"></div>
+                                        <div>Hot Players</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-green">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-globe fa-5x" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div id="num_nations" class="huge"></div>
+                                        <div>Nations</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-yellow">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-futbol-o fa-5x" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div id="num_clubs" class="huge"></div>
+                                        <div>Clubs</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- world-map -->
+            <div class="world-map-container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="paneltitle">
+                                   <i class="fa fa-map" aria-hidden="true"></i>
+                                    Map
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="world-map"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- bar-chart of the clubs-->
+            <div class="bar-chart-container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="paneltitle">
+                                    <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                                    Statistics
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="bar-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="player-table-container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="paneltit">
+                                    <i class="fa fa-user-circle" aria-hidden="true"></i>
+                                    Top 20 Players
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-hover table-bordered">
+                                  <thead class="thead-inverse">
+                                    <tr>
+                                      <th></th>
+                                      <th></th>
+                                      <th>Player Name</th>
+                                      <th>Nation</th>
+                                      <th>Club</th>
+                                      <th>Price</th>
+                                      <th>CP</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    
+                                  </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tooltip" class="hidden">
+            <p class="nation">Hello</p>
+            <div class="players"></div>
+        </div>
+        
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    
+    <!-- DIY D3 -->
+    <script>
+        main();
+    </script>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+
+</body>
 </html>
