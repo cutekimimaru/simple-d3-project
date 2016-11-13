@@ -35,15 +35,72 @@ function main() {
     d3.json("./data/fifa16.json", function(dataSet){
         var nationSummary = bindNation(dataSet);
         var nationPlayers = getSummaryPlayers(dataSet);
+        var clubSummary = bindClub(dataSet);
 
         bindTotalPlayers(dataSet);
-        bindClub(dataSet);
+        
         bindTotalPrice(dataSet);
+        bindTable(dataSet);
 
         // world map
         svgWorldMap(nationPlayers);
-        svgBarChart();
+        svgBarChart(clubSummary);
     });
+}
+
+function bindTable(dataSet) {
+    var sorted  = dataSet.sort((a, b) => {
+        return d3.descending(parseInt(a.rat), parseInt(b.rat))
+    });
+    
+    sorted.length = 20;
+    
+    var table = d3.select('tbody')
+    var tr = table.selectAll('tr')
+        .data(sorted).enter()
+        .append('tr');
+    
+    var columns = ['rat', 'image', 'name', 'nation', 'club', 'price', 'cp'];
+    var specials = ['nation','club'];
+    
+    var count = 0;
+    var td = tr.selectAll('td')
+        .data(function(d) {
+            count = count +1;
+            return columns.map((tile) => {
+                if ( specials.indexOf(tile) !== -1) {
+                    return { column: tile, value: d[tile]['name'] }
+                } else if( tile === "name" ) {
+                    return { column: tile, value: d[tile], url: d['url'] }  
+                } else {
+                    return { column: tile, value: d[tile]}
+                }
+                
+            });
+        })
+        .enter()
+        .append('td')
+        .each(function(d){
+            var self = d3.select(this);
+            self.text(function(d){ 
+                if (d.column !== 'image' && d.column !== 'name') {
+                    return d.value;
+                } 
+            });
+            if (d.column === 'rat') {
+                self.style({
+                    "font-size": "1.5em",
+                    "font-weight": "bold",
+                    "text-align": "center"
+                });
+            }
+            if (d.column === 'image'){
+                self.append('img').attr("src", d.value).attr("width", 50);
+            }
+            if (d.column === 'name') {
+                self.append('a').attr("href", "http://www.futhead.com" + d.url).text(d.value);
+            }
+        });
 }
 
 function getSummaryPlayers(dataSet) {
@@ -121,7 +178,7 @@ function bindNationCircles(dataSet) {
 }
 
 function renderNationCircles(projection) {
-    var fScale = d3.scale.category10();
+    var fScale = d3.scale.category20();
     d3.selectAll("circle").attr({
         cx: function(d) {
             return projection([d.CapitalLongitude, d.CapitalLatitude])[0];
@@ -159,23 +216,55 @@ function renderWorldMap() {
     d3.selectAll("path").attr({fill: "#DDD"});
 }
 
-function svgBarChart() {
+function svgBarChart(clubSummary) {
+    var sorted  = clubSummary.sort((a, b) => {
+        return d3.descending(parseInt(a.num), parseInt(b.num))
+    });
+    
+    sorted.length = 6;
+    
     d3
         .select(".bar-chart")
         .append("svg")
         .attr({
-            width: 600,
-            height: "100%"
+            width: WORLD_MAP_SVG_W,
+            height: WORLD_MAP_SVG_H * 0.45
         });
-    d3
-        .select(".bar-chart>svg")
-        .append("g")
-        .append("rect")
-        .attr({
-            width: 600,
-            height: "100%",
-            fill: "green"
-        });
+    
+    var padding = 15;
+    var ratio = 50;
+    var barHeight = 20;
+    var fScale = d3.scale.category20();
+    var startX = 180;
+    var startY = 10;
+    for (var i=0; i< sorted.length; i=i+1) {
+        d3
+            .select(".bar-chart>svg").append("text")
+            .attr({
+                x: 5,
+                y: barHeight + startY + i * (barHeight+padding) - 3
+            })
+            .style({
+                "font-size": "1.2em",
+                "font-style": "italic"
+            })
+            .text(`${sorted[i].name} (${sorted[i].num})`);
+        d3
+            .select(".bar-chart>svg")
+            .append("rect")
+            .attr({
+                x: startX,
+                y: startY + i * (barHeight+padding),
+                height: barHeight,
+                width: 0,
+                fill: fScale(i)
+            })
+            .transition()
+            .duration(2000)
+            .attr({
+                width: ratio * sorted[i].num
+            });
+    }
 }
 
 function bindTotalPlayers(dataSet) {
@@ -206,6 +295,7 @@ function bindClub(dataSet) {
     d3
         .select("#num_clubs")
         .text(clubSummary.length);
+    return clubSummary;
 }
 
 function bindTotalPrice(dataSet) {
